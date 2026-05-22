@@ -1,0 +1,16 @@
+{
+    "id": "lamentshaunt",
+    "name": "Lament's Haunt",
+    "author": "Nicholas Sledgianowski",
+    "utility": "false",
+    "version": "1.0.0",
+    "description": "A mysterious sector mod introducing the Lament's Haunt custom star system, planets, factions, and ships.",
+    "gameVersion": "0.97a-RC11",
+    "modPlugin": "com.lamentshaunt.LamentsHauntModPlugin",
+    "dependencies": [
+        {
+            "id": "US",
+            "name": "Unknown Skies"
+        }
+    ]
+}
