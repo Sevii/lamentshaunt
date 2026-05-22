@@ -19,6 +19,10 @@ import com.fs.starfarer.api.impl.campaign.ids.FleetTypes;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.Personalities;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Terrain;
+import com.fs.starfarer.api.impl.campaign.terrain.MagneticFieldTerrainPlugin;
+import com.fs.starfarer.api.impl.campaign.procgen.StarSystemGenerator;
+import com.fs.starfarer.api.impl.campaign.procgen.StarAge;
 import java.awt.Color;
 
 public class LamentsHauntGen implements SectorGeneratorPlugin {
@@ -35,8 +39,8 @@ public class LamentsHauntGen implements SectorGeneratorPlugin {
         // Set the background texture (fallback to standard Starsector background)
         system.setBackgroundTextureFilename("graphics/backgrounds/background4.jpg");
         
-        // Tint the system light - pale red/orange for a red dwarf star
-        system.setLightColor(new Color(255, 185, 185));
+        // Tint the system light - warm, deep red/orange for a red dwarf star
+        system.setLightColor(new Color(255, 150, 120));
         
         // Add a star - class star_red_dwarf
         PlanetAPI star = system.initStar(
@@ -76,7 +80,30 @@ public class LamentsHauntGen implements SectorGeneratorPlugin {
         barrenMarket.setFactionId("neutral");
         barrenPlanet.setMarket(barrenMarket);
         Global.getSector().getEconomy().addMarket(barrenMarket, true);
-        
+
+        // A big, warm dust ring encircling the red dwarf, filling the gap before Glimmer
+        system.addRingBand(
+            star,
+            "misc",
+            "rings_dust0",
+            512f,                          // band texture scale
+            0,                             // band index
+            new Color(255, 170, 140, 180), // warm tone, lit by the red dwarf
+            512f,                          // ring width
+            2200f,                         // orbit radius from the star
+            260f                           // orbital period in days
+        );
+
+        // A very sparse scattering of asteroids tumbling through the big ring
+        system.addAsteroidBelt(
+            star,
+            14,    // very sparse - reads as a faint debris ring, not a field
+            2200f, // orbit radius (sits on the big ring)
+            360f,  // belt width
+            240f,  // min orbital period
+            300f   // max orbital period
+        );
+
         // Add the fluorescent gas giant orbiting the star
         PlanetAPI fluorescentPlanet = system.addPlanet(
             "lamentshaunt_fluorescent", // unique internal id
@@ -106,20 +133,51 @@ public class LamentsHauntGen implements SectorGeneratorPlugin {
         fluorescentMarket.setFactionId("neutral");
         fluorescentPlanet.setMarket(fluorescentMarket);
         Global.getSector().getEconomy().addMarket(fluorescentMarket, true);
-        
-        // Add a beautiful fluorescent cyan ring band around Glimmer
+
+        // The signature glow: a cyan-tuned magnetic field (aurora) shrouding Glimmer
+        SectorEntityToken glimmerField = system.addTerrain(
+            Terrain.MAGNETIC_FIELD,
+            new MagneticFieldTerrainPlugin.MagneticFieldParams(
+                fluorescentPlanet.getRadius() + 200f, // band width
+                fluorescentPlanet.getRadius() + 100f, // middle radius
+                fluorescentPlanet,                    // related entity
+                fluorescentPlanet.getRadius() + 50f,  // inner radius
+                fluorescentPlanet.getRadius() + 350f, // outer radius
+                new Color(20, 60, 90, 40),            // base tint
+                0.25f,                                 // aurora frequency
+                new Color(80, 230, 255, 255),          // aurora palette...
+                new Color(140, 240, 255, 255),
+                new Color(90, 200, 235, 255),
+                new Color(120, 255, 245, 255),
+                new Color(60, 210, 255, 255)
+            )
+        );
+        glimmerField.setCircularOrbit(fluorescentPlanet, 0f, 0f, 100f);
+
+        // Layered fluorescent ring bands around Glimmer for Saturn-like depth
         system.addRingBand(
             fluorescentPlanet,
             "misc",
             "rings_dust0",
-            96f,
+            256f,
             0,
-            new Color(150, 240, 255, 230),
-            96f,
-            450f,
-            60f
+            new Color(150, 240, 255, 140), // inner, faint
+            256f,
+            380f,
+            55f
         );
-        
+        system.addRingBand(
+            fluorescentPlanet,
+            "misc",
+            "rings_ice0",
+            256f,
+            0,
+            new Color(120, 235, 255, 230), // bright main band
+            256f,
+            470f,
+            65f
+        );
+
         // Add the small jungle world moon orbiting the fluorescent gas giant
         PlanetAPI jungleMoon = system.addPlanet(
             "lamentshaunt_jungle", // unique internal id
@@ -148,7 +206,16 @@ public class LamentsHauntGen implements SectorGeneratorPlugin {
         jungleMarket.setFactionId("neutral");
         jungleMoon.setMarket(jungleMarket);
         Global.getSector().getEconomy().addMarket(jungleMarket, true);
-        
+
+        // A salvageable derelict drifting near Haunt as set dressing
+        SectorEntityToken derelictProbe = system.addCustomEntity(
+            "lamentshaunt_probe",
+            "Derelict Probe",
+            "derelict_survey_ship",
+            "neutral"
+        );
+        derelictProbe.setCircularOrbit(jungleMoon, 200f, 420f, 35f);
+
         // Add 3 stable hyperspace areas in the system
         SectorEntityToken stable1 = system.addCustomEntity(
             "lamentshaunt_stable1",
@@ -175,6 +242,9 @@ public class LamentsHauntGen implements SectorGeneratorPlugin {
         );
         stable3.setCircularOrbit(star, 255f, 6000f, 480f);
         
+        // Drape a systemwide nebula over everything for mood and depth
+        StarSystemGenerator.addSystemwideNebula(system, StarAge.OLD);
+
         // Autogenerate jump points for the system to make it accessible from hyperspace
         system.autogenerateHyperspaceJumpPoints(true, true);
         
