@@ -5,8 +5,9 @@
     "utility": "false",
     "version": "1.0.0",
     "description": "A mysterious sector mod introducing the Lament's Haunt custom star system, planets, factions, and ships.",
-    "gameVersion": "0.97a-RC11",
+    "gameVersion": "0.98a-RC8",
     "modPlugin": "com.lamentshaunt.LamentsHauntModPlugin",
+    "jars": ["jars/lamentshaunt.jar"],
     "dependencies": [
         {
             "id": "US",

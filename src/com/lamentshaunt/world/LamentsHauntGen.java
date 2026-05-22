@@ -29,16 +29,17 @@ public class LamentsHauntGen implements SectorGeneratorPlugin {
         PlanetAPI star = system.initStar(
             "lamentshaunt_star", // unique internal id
             "star_red_dwarf",    // type (refers to star types in star_types.json)
-            "Lament",            // display name
-            250f                 // radius (red dwarf star is smaller)
+            250f,                // radius (red dwarf star is smaller)
+            400f                 // corona width
         );
+        star.setName("Lament");
         
         // Add the fluorescent gas giant orbiting the star
         PlanetAPI fluorescentPlanet = system.addPlanet(
             "lamentshaunt_fluorescent", // unique internal id
             star,                       // focus of orbit
             "Glimmer",                  // display name
-            "gas_giant",                // type
+            "US_fluorescent",             // type
             45f,                        // starting orbit angle
             140f,                       // radius
             4500f,                      // orbit radius in pixels
@@ -98,6 +99,7 @@ public class LamentsHauntGen implements SectorGeneratorPlugin {
         );
         stable1.setCircularOrbit(star, 15f, 2000f, 180f);
         
+        // Add 3 stable locations in the system
         SectorEntityToken stable2 = system.addCustomEntity(
             "lamentshaunt_stable2",
             "Stable Location",
@@ -115,6 +117,6 @@ public class LamentsHauntGen implements SectorGeneratorPlugin {
         stable3.setCircularOrbit(star, 255f, 6000f, 480f);
         
         // Autogenerate jump points for the system to make it accessible from hyperspace
-        system.autogenerateHyperspaceJumpPoints();
+        system.autogenerateHyperspaceJumpPoints(true, true);
     }
 }
