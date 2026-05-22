@@ -1,3 +1,4 @@
 id,type,text1,text2,text3,text4
 lamentshaunt_fluorescent_desc,CUSTOM,"A gargantuan, glowing gas giant enveloped in fluorescent cloud layers of unknown chemical composition. It shines like a beacon in the dark of the Lament system.",,,
 lamentshaunt_jungle_desc,CUSTOM,"A small, biologically diverse jungle world orbiting Glimmer. Thick vegetation blankets its surface, warmed by the greenhouse effect under the gas giant's fluorescent glow.",,,
+lamentshaunt_barren_desc,CUSTOM,"A desolate, scorched barren world orbiting close to the Lament star. Its surface is blasted by intense radiation and extreme heat, cracking the planet's crust and exposing rich veins of heavy metals and rare ores.",,,

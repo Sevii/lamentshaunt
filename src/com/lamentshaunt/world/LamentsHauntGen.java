@@ -14,7 +14,7 @@ public class LamentsHauntGen implements SectorGeneratorPlugin {
     @Override
     public void generate(SectorAPI sector) {
         // Create the star system
-        StarSystemAPI system = sector.createStarSystem("Lament's Haunt");
+        StarSystemAPI system = sector.createStarSystem("Lament's Star");
         
         // Position the star system in hyperspace (away from core worlds)
         system.getLocation().set(-16300, -16000);
@@ -33,6 +33,35 @@ public class LamentsHauntGen implements SectorGeneratorPlugin {
             400f                 // corona width
         );
         star.setName("Lament");
+        
+        // Add the barren planet closely orbiting the star
+        PlanetAPI barrenPlanet = system.addPlanet(
+            "lamentshaunt_barren",      // unique internal id
+            star,                       // focus of orbit
+            "Cinder",                   // display name
+            "barren",                   // type
+            220f,                       // starting orbit angle
+            85f,                        // radius
+            1200f,                      // orbit radius in pixels (very close to star)
+            80f                         // orbital period in game days
+        );
+        barrenPlanet.setCustomDescriptionId("lamentshaunt_barren_desc");
+        
+        // Create condition-only market for the barren planet
+        MarketAPI barrenMarket = Global.getFactory().createMarket(
+            "lamentshaunt_barren_market",
+            barrenPlanet.getName(),
+            0
+        );
+        barrenMarket.setPrimaryEntity(barrenPlanet);
+        barrenMarket.setPlanetConditionMarketOnly(true);
+        barrenMarket.addCondition("extreme_heat");
+        barrenMarket.addCondition("no_atmosphere");
+        barrenMarket.addCondition("ore_rich");
+        barrenMarket.addCondition("rare_ore_ultrarich");
+        barrenMarket.setFactionId("neutral");
+        barrenPlanet.setMarket(barrenMarket);
+        Global.getSector().getEconomy().addMarket(barrenMarket, true);
         
         // Add the fluorescent gas giant orbiting the star
         PlanetAPI fluorescentPlanet = system.addPlanet(
@@ -62,6 +91,19 @@ public class LamentsHauntGen implements SectorGeneratorPlugin {
         fluorescentMarket.setFactionId("neutral");
         fluorescentPlanet.setMarket(fluorescentMarket);
         Global.getSector().getEconomy().addMarket(fluorescentMarket, true);
+        
+        // Add a beautiful fluorescent cyan ring band around Glimmer
+        system.addRingBand(
+            fluorescentPlanet,
+            "misc",
+            "rings_dust0",
+            64f,
+            0,
+            new Color(150, 240, 255, 150),
+            64f,
+            300f,
+            60f
+        );
         
         // Add the small jungle world moon orbiting the fluorescent gas giant
         PlanetAPI jungleMoon = system.addPlanet(
