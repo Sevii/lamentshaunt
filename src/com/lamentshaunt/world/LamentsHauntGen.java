@@ -17,7 +17,7 @@ public class LamentsHauntGen implements SectorGeneratorPlugin {
         StarSystemAPI system = sector.createStarSystem("Lament's Haunt");
         
         // Position the star system in hyperspace (away from core worlds)
-        system.getLocation().set(-15000, 15000);
+        system.getLocation().set(-16300, -16000);
         
         // Set the background texture (fallback to standard Starsector background)
         system.setBackgroundTextureFilename("graphics/backgrounds/background4.jpg");
@@ -58,6 +58,7 @@ public class LamentsHauntGen implements SectorGeneratorPlugin {
         fluorescentMarket.addCondition("US_fluorescent");
         fluorescentMarket.addCondition("US_floating");
         fluorescentMarket.addCondition("volatiles_plentiful");
+        fluorescentMarket.addCondition("high_gravity");
         fluorescentMarket.setFactionId("neutral");
         fluorescentPlanet.setMarket(fluorescentMarket);
         Global.getSector().getEconomy().addMarket(fluorescentMarket, true);
@@ -84,8 +85,8 @@ public class LamentsHauntGen implements SectorGeneratorPlugin {
         jungleMarket.setPrimaryEntity(jungleMoon);
         jungleMarket.setPlanetConditionMarketOnly(true);
         jungleMarket.addCondition("habitable");
-        jungleMarket.addCondition("farmland_poor");
-        jungleMarket.addCondition("organics_common");
+        jungleMarket.addCondition("farmland_rich");
+        jungleMarket.addCondition("organics_abundant");
         jungleMarket.setFactionId("neutral");
         jungleMoon.setMarket(jungleMarket);
         Global.getSector().getEconomy().addMarket(jungleMarket, true);
