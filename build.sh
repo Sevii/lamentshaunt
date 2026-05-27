@@ -19,7 +19,8 @@ mkdir -p "${JARS_DIR}"
 echo "Compiling Java files..."
 javac -cp "${CLASSPATH}" --release 8 -d "${BIN_DIR}" \
   src/com/lamentshaunt/LamentsHauntModPlugin.java \
-  src/com/lamentshaunt/world/LamentsHauntGen.java
+  src/com/lamentshaunt/world/LamentsHauntGen.java \
+  src/com/lamentshaunt/world/LamentsHauntColonizationFixer.java
 
 echo "Packaging class files into jar..."
 jar cf "${JARS_DIR}/${JAR_NAME}" -C "${BIN_DIR}" .
